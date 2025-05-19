@@ -24,26 +24,46 @@ Finally, we introduce a **noise model based on two-qubit gate counts** that accu
 
 
 # Formulation
-QAOA consists of alternating layers that encode the problem of interest along with a mixer element in charge of amplifying the desired solutions with low energy. In this case, the COP cost Hamiltonian is given by
 
-$$H_C = \sum_i h_i \sigma_z^i + \sum_{i, j > i} J_{ij} \sigma_z^i \sigma_z^j,\tag{1}$$
+QAOA consists of alternating layers that encode the problem of interest along with a mixer element in charge of amplifying solutions with low energy. In this case, the COP cost Hamiltonian is given by
 
-where $\sigma_z^i$ is the Pauli-z term of qubit i, and $h_i$ and $J_{ij}$ are coefficients associated with the problem. Usually, $H_C$ is derived from the quadratic unconstrained binary optimization (QUBO) formulation \cite{Lucas2014, Montanez-Barrera2024, Montanez-Barrera2022}. The QUBO to $H_C$ transformation usually includes a constant term that does not affect the QAOA formulation and is left out for simplicity. $H_C$ is encoded into a parametric unitary gate given by
+$$
+H_C = \sum_i h_i \sigma_z^i + \sum_{i, j > i} J_{ij} \sigma_z^i \sigma_z^j,
+$$
 
-$$U_C(H_C, \gamma)=e^{-j \gamma_i H_C},\tag{2}$$
+where $\sigma_z^i$ is the Pauli-z term of qubit $i$, and $h_i$ and $J_{ij}$ are coefficients associated with the problem. Usually, $H_C$ is derived from the quadratic unconstrained binary optimization (QUBO) formulation [Lucas2014, Montanez-Barrera2024, Montanez-Barrera2022]. The QUBO-to-$H_C$ transformation typically includes a constant term that does not affect the QAOA formulation and is omitted for simplicity. 
 
- where $\gamma_i$ is a parameter that in our case comes from the linear ramp schedule. Following this, in every second layer, a unitary operator is applied given by 
+$H_C$ is encoded into a parametric unitary gate given by:
 
-$$U(H_B, \beta)=e^{j \beta_i H_B},\tag{3}$$
+$$
+U_C(H_C, \gamma_i)=e^{-j \gamma_i H_C},
+$$
+
+where $\gamma_i$ is a parameter that in our case comes from the linear ramp schedule. Following this, in every second part of a layer, a unitary operator is applied, given by:
+
+$$
+U(H_B, \beta_i)=e^{j \beta_i H_B},
+$$
 
 where $\beta_i$ is taken from the linear ramp schedule and 
 
-$$H_B = \sum_{i=0}^{N_q-1} \sigma_i^x, \tag{4}$$
+$$
+H_B = \sum_{i=0}^{N_q-1} \sigma_i^x,
+$$
 
-with $\sigma_i^x$ the Pauli-x term of qubit $i$. Here, $R_X(-2\beta_i) = e^{j\beta_i \sigma^x}$, $p$ is the number of repetitions of the unitary gates of Eqs.~2 and 3, and the initial state is a superposition state $| + \rangle^{\otimes N_q}$. Repeated preparation and measurement of the final QAOA state yields a set of candidate solution samples, which are expected to give the optimal solution or some low-energy solution.
+with $\sigma_i^x$ the Pauli-x term of qubit $i$. The general QAOA circuit is shown in Fig. `linear_ramp_schedule-(a)`. Here, $R_X(-2\beta_i) = e^{j\beta_i \sigma^x}$, $p$ is the number of repetitions of the unitary gates from the equations above, and the initial state is a superposition state $|+\rangle^{\otimes N_q}$. Repeated preparation and measurement of the final QAOA state yields a set of candidate solution samples, which are expected to give the optimal solution or some low-energy solution.
 
-LR-QAOA is characterized by three parameters $\Delta_\beta$, $\Delta_\gamma$, and the number of layers $p$. The $\beta_i$ and $\gamma_i$ parameters are given by 
+In Fig. `linear_ramp_schedule-(b)`, we show the LR-QAOA protocol. It is characterized by three parameters: $\Delta_\beta$, $\Delta_\gamma$, and the number of layers $p$. The $\beta_i$ and $\gamma_i$ parameters are given by:
 
-$$\beta_i = \left(1-\frac{i}{p}\right)\Delta_\beta\ \ \mathrm{and} \ \ \gamma_i = \frac{i+1}{p}\Delta_\gamma,\tag{4}$$
+$$
+\beta_i = \left(1 - \frac{i}{p}\right)\Delta_\beta, \quad
+\gamma_i = \frac{i + 1}{p} \Delta_\gamma,
+$$
 
-for $i=0, ..., p-1$. 
+for $i = 0, ..., p - 1$. 
+
+For our simulations, we scan over a set of $\Delta_{\gamma}$ and $\Delta_{\beta}$ values from one problem at each size and use the best value across the remaining cases. For the experimental results, we use:
+
+$$
+\Delta_\beta = 0.3, \quad \Delta_\gamma = 0.6.
+$$
