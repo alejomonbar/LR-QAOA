@@ -2,8 +2,26 @@
 
 Link: https://arxiv.org/abs/2405.09169
 
+The Quantum Approximate Optimization Algorithm (QAOA) is a promising algorithm for solving combinatorial optimization problems (COPs), with performance governed by variational parameters $\{\gamma_i, \beta_i\}_{i=0}^{p-1}$.
 
-The quantum approximate optimization algorithm (QAOA) is a promising algorithm for solving combinatorial optimization problems (COPs). In this algorithm, there are alternating layers consisting of a mixer and a problem Hamiltonian. Each layer $i=0,\ldots,p-1$ is parameterized by $\beta_i$ and $\gamma_i$. How to find these parameters has been an open question with the majority of the research focused on finding them using classical algorithms. In this work, we present evidence that fixed linear ramp schedules constitute a universal set of QAOA parameters, i.e., a set of $\gamma$ and $\beta$ parameters that rapidly approximate the optimal solution, $x^{\*}$, independently of the COP selected, and that the success probability of finding it, $probability(x^\*)$, increases with the number of QAOA layers $p$. We simulate linear ramp QAOA protocols (LR-QAOA) involving up to $N_q=42$ qubits and $p = 400$ layers on random instances of 9 different COPs. The results suggest that $probability(x^\*) \approx 1/2^{(\eta N_q / p)}$ for a constant $\eta$. We extend the analysis in 4 COPs with $p=N_q$ and show that $probability(x^*)$ seems to be constant for general cases.  For example, when implementing LR-QAOA with $p=42$, the $probability(x^\*)$ for 42-qubit Weighted MaxCut problems (W-MaxCut) increases from $2/2^{42}\approx 10^{-13}$ to an average of 0.13. We compare LR-QAOA, simulated annealing (SA), and branch-and-bound (B\&B) finding a fundamental improvement in LR-QAOA. We test LR-QAOA on real hardware using IonQ Aria, Quantinuum H2-1, IBM Brisbane, IBM Kyoto, and IBM Osaka, encoding random weighted MaxCut (W-MaxCut) problems from 5 to 109 qubits and $p=3$ to $100$. We find that even for the largest case, $N_q=109$ qubits and $p=100$, information about the LR-QAOA optimization protocol is still present. The circuit involved requires 21200 CNOT gates and a time of $\approx 132 \ \mu s$. The resilience of LR-QAOA to noise is attributed to its characteristic of bringing the system towards a minimal energy state despite noise driving it towards a maximally mixed state. These results show that LR-QAOA effectively identifies high-quality solutions across a wide range of COPs with a scaling improvement against some classical methods.
+While most prior work has focused on classically optimizing these parameters, we demonstrate that fixed linear ramp schedules—**linear ramp QAOA (LR-QAOA)**—can efficiently approximate optimal solutions across diverse COPs.
+
+Simulations with up to $N_q = 42$ qubits and $p = 400$ layers suggest that the success probability scales as:
+
+$$
+P(x^*) \approx 2^{-\eta(p) N_q - C}
+$$
+
+where $\eta(p)$ decreases with increasing $p$. For example, in Weighted MaxCut instances, $\eta(10) = 0.22$ improves to $\eta(100) = 0.05$.
+
+Comparisons with classical algorithms, including **simulated annealing**, **Tabu Search**, and **branch-and-bound**, show a scaling advantage for LR-QAOA.
+
+We present LR-QAOA results on multiple QPUs (IonQ, Quantinuum, IBM) with up to $N_q = 109$ qubits, $p = 100$, and circuits requiring **21,200 CNOT gates**.
+
+Finally, we introduce a **noise model based on two-qubit gate counts** that accurately reproduces the experimental behavior of LR-QAOA.
+
+
+
 
 # Formulation
 QAOA consists of alternating layers that encode the problem of interest along with a mixer element in charge of amplifying the desired solutions with low energy. In this case, the COP cost Hamiltonian is given by
